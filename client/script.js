@@ -206,39 +206,6 @@ class StoryManager {
   }
 }
 
-// ==========================
-// MODAL & INTERACTIVE ITEMS (unchanged)
-// ==========================
-function showModal(title, text, choices = null) {
-  const modal = document.querySelector(".modal");
-  const modalTitle = modal.querySelector(".modal-title");
-  const modalText = modal.querySelector(".modal-text");
-  modalTitle.textContent = title;
-  if (choices) {
-    const choicesHtml = choices
-      .map(
-        (choice) =>
-          `<button class="choice-btn retro-btn">${choice.text}</button>`
-      )
-      .join("");
-    modalText.innerHTML = `<p>${text}</p><div class="choices-container">${choicesHtml}</div>`;
-    const choiceButtons = modalText.querySelectorAll(".choice-btn");
-    choiceButtons.forEach((btn, index) => {
-      btn.addEventListener("click", choices[index].action);
-      btn.addEventListener("mouseenter", () => {
-        const hoverSound = new Audio("assets/sounds/hover.mp3");
-        hoverSound.volume = 0.2;
-        hoverSound.play().catch(() => {});
-      });
-    });
-  } else {
-    modalText.textContent = text;
-  }
-  modal.classList.remove("hidden");
-  const modalClose = modal.querySelector(".modal-close");
-  modalClose.focus();
-}
-
 function hideModal() {
   document.querySelector(".modal").classList.add("hidden");
 }
@@ -619,6 +586,43 @@ function showModal(title, text, choices = null) {
   modal.classList.remove("hidden");
   modalClose.focus();
 }
+
+
+// Feature flag: enable with ?dos=1 or localStorage.setItem('enableDOS','1')
+const enableDOS =
+  new URLSearchParams(window.location.search).get('dos') === '1' ||
+  localStorage.getItem('enableDOS') === '1';
+
+function openTerminalPrompt() {
+  const go = () => {
+    document.body.classList.add("fade-out");
+    setTimeout(() => window.location.assign("./terminal.html"), 150);
+  };
+
+  showModal(
+    "Main System",
+    "Press Enter to boot Quantum DOS. Press Esc to cancel.",
+    [
+      { text: "Boot (Enter)", action: go },
+      { text: "Cancel (Esc)", action: () => hideModal() },
+    ]
+  );
+
+  const onKey = (e) => {
+    if (e.key === "Enter") { e.preventDefault(); go(); }
+    else if (e.key === "Escape") { e.preventDefault(); hideModal(); }
+  };
+  document.addEventListener("keydown", onKey);
+
+  const origHide = hideModal;
+  hideModal = function () {
+    document.removeEventListener("keydown", onKey);
+    hideModal = origHide;
+    return origHide();
+  };
+}
+
+
 // Item content for interactive objects
 const itemContent = {
   "comic-book": {
@@ -650,6 +654,10 @@ const itemContent = {
   "center-computer": {
     title: "Primary Development System",
     text: "The heart of this digital sanctuary. This powerful machine has been the birthplace of countless games and digital experiments. Its keyboard bears the worn marks of endless lines of code.",
+    action: () => {
+      if (enableDOS) openTerminalPrompt();
+      else showModal("Primary Development System", "System ready. (Enable DOS with ?dos=1)");
+    }
   },
   "left-computer": {
     title: "Archival Computing Unit",
