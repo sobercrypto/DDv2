@@ -6,9 +6,13 @@ const fetch = require("node-fetch");
 const dotenv = require("dotenv");
 const path = require("path");
 const fs = require("fs");
+const OpenAI = require("openai");
 
 dotenv.config();
 const app = express();
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
 
 // Static file serving and middleware setup
 app.use(express.static(path.join(__dirname, "client")));
@@ -99,69 +103,27 @@ const db = new sqlite3.Database(
   }
 );
 
-// Helper function to generate comic art using Replicate
-async function generateComicArt(storyText) {
+// Helper function to generate comic art using OpenAI Images
+async function generateComicArt(storyText, character) {
   try {
-    const response = await fetch("https://api.replicate.com/v1/predictions", {
-      method: "POST",
-      headers: {
-        Authorization: `Token ${process.env.REPLICATE_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        version:
-          "39ed52f2a78e934b3ba6e2a89f5b1c712de7dfea535525255b1aa35c5565e08b",
-        input: {
-          prompt: `comic book style art, detailed professional illustration of: ${storyText}`,
-          negative_prompt:
-            "blurry, low quality, distorted, bad anatomy, text, word bubbles, watermark",
-        },
-      }),
+    console.log("[API] Generating comic art with gpt-image-1...");
+    const characterStyles = {
+      Steve: "Minecraft blocky pixel art style with cubic shapes",
+      Mario: "vibrant Nintendo platformer art, colorful and cartoonish",
+      Sonic: "dynamic speed-focused anime style",
+      Link: "Legend of Zelda fantasy adventure art",
+    };
+    const stylePrompt =
+      characterStyles[character] ||
+      "comic book style art, detailed professional illustration";
+    const response = await openai.images.generate({
+      model: "gpt-image-1",
+      prompt: `${stylePrompt}: ${storyText}. No text or word bubbles.`,
+      size: "1024x1024",
+      quality: "standard",
+      n: 1,
     });
-
-    if (!response.ok) {
-      const error = await response.json();
-      console.error("Replicate error details:", error);
-      throw new Error(`Replicate API error: ${response.statusText}`);
-    }
-
-    const prediction = await response.json();
-    console.log("Prediction created:", prediction);
-
-    // Poll for result
-    const maxAttempts = 30;
-    let attempts = 0;
-
-    while (attempts < maxAttempts) {
-      const checkResponse = await fetch(
-        `https://api.replicate.com/v1/predictions/${prediction.id}`,
-        {
-          headers: {
-            Authorization: `Token ${process.env.REPLICATE_API_KEY}`,
-          },
-        }
-      );
-
-      if (!checkResponse.ok) {
-        throw new Error(
-          `Failed to check prediction status: ${checkResponse.statusText}`
-        );
-      }
-
-      const result = await checkResponse.json();
-      console.log("Prediction status:", result.status);
-
-      if (result.status === "succeeded") {
-        return result.output[0];
-      } else if (result.status === "failed") {
-        throw new Error("Image generation failed");
-      }
-
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      attempts++;
-    }
-
-    throw new Error("Timeout waiting for image generation");
+    return response.data[0].url;
   } catch (error) {
     console.error("Error generating comic art:", error);
     throw error;
@@ -228,7 +190,7 @@ CHOICES:
         "anthropic-version": "2023-06-01",
       },
       body: JSON.stringify({
-        model: "claude-3-opus-20240229",
+        model: "claude-sonnet-4-20250514",
         max_tokens: 1000,
         messages: [
           {
@@ -280,7 +242,7 @@ CHOICES:
     let imageUrl = null;
     try {
       console.log("[API] Generating comic art...");
-      imageUrl = await generateComicArt(storyText);
+      imageUrl = await generateComicArt(storyText, character);
     } catch (imageError) {
       console.error("Comic art generation failed:", imageError);
     }
