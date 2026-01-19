@@ -1,0 +1,42 @@
+# Dependencies
+node_modules/
+.node-gyp/
+
+# Environment variables
+.env
+.env.local
+
+# Database
+client/.data/*.db
+client/.data/*.db-journal
+
+# Logs
+*.log
+pnpm-debug.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build artifacts
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Legacy Glitch files
+.glitchdotcom.json
+.glitch-assets
+shrinkwrap.yaml
+
+# Temporary files
+*.tmp
+.cache/
