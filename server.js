@@ -39,7 +39,7 @@ app.use(
 app.use((req, res, next) => {
   res.setHeader(
     "Content-Security-Policy",
-    "default-src 'self'; connect-src 'self' https://api.anthropic.com https://api.replicate.com https://api.openai.com data: blob:;"
+    "default-src 'self'; connect-src 'self' https://api.anthropic.com https://api.openai.com data: blob:;"
   );
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
