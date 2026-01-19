@@ -1,48 +1,131 @@
-# Hello website!
+# Digital Dreamers v2
 
-This is a basic HTML starter project you can build on however you like. No need to save. While you develop your site, your changes will happen ✨ immediately in the preview window. On the left you'll see the files that make up your site, including HTML, JavaScript, and CSS. You can upload assets like images or audio in `assets`. The rest is up to you and your imagination. 🦄
+An interactive, AI-powered comic book game featuring classic video game characters in an immersive retro computing environment.
 
-_Last updated: 28 Feb 2023_
+## Overview
 
-## What's in this project?
+Digital Dreamers is a unique interactive storytelling experience that combines:
+- **AI-Generated Stories**: Dynamic narratives powered by Claude (Anthropic)
+- **Comic Book Art**: Custom illustrations generated with OpenAI's image models
+- **Character Selection**: Play as Steve, Mario, Sonic, or Link
+- **Roguelite Elements**: Previous playthroughs influence future stories
+- **Retro Aesthetics**: Nostalgic 90s bedroom setting with interactive elements
 
-← `README.md`: That's this file, where you can tell people what your cool website does and how you built it.
+## Features
 
-← `index.html`: This is the main web page for your site. The HTML defines the structure and content of the page using _elements_. You'll see references in the HTML to the JS and CSS files. Try clicking the image in the center of the page!
+- 🎮 **Interactive Comic Book**: Make choices that shape your character's story
+- 🎨 **Dynamic Art Generation**: Each page features unique AI-generated comic art
+- 💾 **Save System**: SQLite database persists game sessions and story choices
+- 🔄 **Replayability**: Multiple story paths with varying moral alignments (Good/Neutral/Evil)
+- 📖 **Achievement System**: Track your accomplishments across playthroughs
+- 🖥️ **Retro UI**: Immersive vintage computer interface with terminal interactions
 
-← `style.css`: CSS files add styling rules to your content. The CSS applies styles to the elements in your HTML page. The style rules also make the image move when you click it.
+## Tech Stack
 
-← `script.js`: If you're feeling fancy you can add interactivity to your site with JavaScript. The code in the JavaScript file runs when the page loads, and when the visitor clicks the button you can add using the code in the TODO.
+### Backend
+- **Node.js** with Express
+- **SQLite3** for data persistence
+- **Anthropic Claude** (Sonnet 4) for story generation
+- **OpenAI** (gpt-image-1) for comic art generation
+- **CORS** and body-parser middleware
 
-Open each file and check out the comments (in gray) for more info.
+### Frontend
+- **React 19** for UI components
+- **Vanilla JavaScript** for terminal interactions
+- **Custom CSS** with retro/pixel art styling
+- **Google Fonts** (Press Start 2P, IBM Plex Mono)
 
-## Try this next 🏗️
-
-Take a look in `TODO.md` for next steps you can try out in your new site!
-
-___Want a minimal version of this project to build your own website? Check out [Blank Website](https://glitch.com/edit/#!/remix/glitch-blank-website)!___
-
-## Ready to share your site?
-
-Add these meta tags for SEO and social sharing between your page `<head></head>` tags, changing the values for your site:
+## Project Structure
 
 ```
-<link rel="canonical" href="https://glitch-hello-website.glitch.me/" />
-<meta name="description" content="A simple website, built with Glitch. Remix it to get your own."/>
-<meta name="robots" content="index,follow" />
-<meta property="og:title" content="Hello World!" />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://glitch-hello-website.glitch.me/" />
-<meta property="og:description" content="A simple website, built with Glitch. Remix it to get your own."/>
-<meta property="og:image" content="https://cdn.glitch.com/605e2a51-d45f-4d87-a285-9410ad350515%2Fhello-website-social.png?v=1616712748147"/>
-<meta name="twitter:card" content="summary" />
+DDv2/
+├── server.js              # Express server with API endpoints
+├── client/
+│   ├── index.html         # Main HTML entry point
+│   ├── script.js          # Core game logic
+│   ├── components/        # React components
+│   ├── pages/             # Game pages/views
+│   ├── styles/            # CSS stylesheets
+│   └── .data/             # SQLite database files
+├── scripts/
+│   ├── terminal.js        # Terminal emulator logic
+│   ├── character-select.js # Character selection UI
+│   └── terminal-mount.js  # Terminal initialization
+└── package.json           # Dependencies and scripts
+
 ```
 
-![Glitch](https://cdn.glitch.com/a9975ea6-8949-4bab-addb-8a95021dc2da%2FLogo_Color.svg?v=1602781328576)
+## Installation
 
-## You built this with Glitch!
+1. Clone the repository:
+```bash
+git clone https://github.com/sobercrypto/DDv2.git
+cd DDv2
+```
 
-[Glitch](https://glitch.com) is a friendly community where millions of people come together to build web apps and websites.
+2. Install dependencies:
+```bash
+npm install
+```
 
-- Need more help? [Check out our Help Center](https://help.glitch.com/) for answers to any common questions.
-- Ready to make it official? [Become a paid Glitch member](https://glitch.com/pricing) to boost your app with private sharing, more storage and memory, domains and more.
+3. Set up environment variables:
+Create a `.env` file with:
+```
+ANTHROPIC_API_KEY=your_anthropic_api_key
+OPENAI_API_KEY=your_openai_api_key
+PORT=3000
+```
+
+4. Start the server:
+```bash
+npm start
+```
+
+5. Open your browser to `http://localhost:3000`
+
+## API Endpoints
+
+- `POST /api/generate-story` - Generate story content and choices
+- `POST /api/save-choice` - Save player's choice to database
+- `GET /api/story/:sessionId/:pageNumber` - Retrieve saved story data
+- `GET /health` - Health check endpoint
+
+## Database Schema
+
+### game_sessions
+- `id`: Session identifier
+- `player_id`: Player identifier
+- `character_type`: Selected character
+- `current_page`: Current story page
+- `created_at`: Session creation timestamp
+
+### story_choices
+- `id`: Choice identifier
+- `session_id`: Reference to game session
+- `page_number`: Story page number
+- `choice_made`: Index of choice selected
+- `story_text`: Generated story text
+- `choice1_text`, `choice2_text`, `choice3_text`: Choice options
+- `image_url`: URL to generated comic art
+
+### achievements
+- `id`: Achievement identifier
+- `session_id`: Reference to game session
+- `achievement_type`: Type of achievement
+- `unlocked_at`: Timestamp when unlocked
+
+## Development
+
+The project uses:
+- Node.js >=16.x
+- NPM for package management
+- Express for server framework
+- React 19 for frontend components
+
+## License
+
+MIT License - See LICENSE file for details
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
