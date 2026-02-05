@@ -3,11 +3,24 @@
   --neon-purple: #bc13fe;
   --glow-strength: 8px;
 }
+
+/*
+ * CHARACTER COMIC COVERS
+ * Default: Pixldrift cover
+ *
+ * TODO: Add character-specific covers loaded dynamically via JS:
+ *   - pixldrift_cover.webp (done)
+ *   - spudnik_cover.webp (TODO: need asset)
+ *   - steve_cover.webp (TODO: need asset)
+ *
+ * JS should add body class like .character-spudnik, .character-steve
+ * and CSS can swap backgrounds accordingly.
+ */
 body {
   margin: 0;
   padding: 0;
   font-family: "Press Start 2P", cursive;
-  background-image: url(https://cdn.glitch.global/5817c318-6998-4ceb-a6e8-cf334857147e/Drift_Comic.webp?v=1738198263325);
+  background-image: url('../assets/images/Drift_Comic.webp');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -15,6 +28,18 @@ body {
   /*   overflow: hidden; */
   position: relative;
 }
+
+/* TODO: Uncomment when spudnik_cover.webp is added
+body.character-spudnik {
+  background-image: url('../assets/images/spudnik_cover.webp');
+}
+*/
+
+/* TODO: Uncomment when steve_cover.webp is added
+body.character-steve {
+  background-image: url('../assets/images/steve_cover.webp');
+}
+*/
 .scanline {
   position: fixed;
   top: 0;

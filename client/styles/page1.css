@@ -10,38 +10,46 @@
   --glitch-intensity: 0;
 }
 
-/* Progressive Decay by Page Number */
+/* Progressive Decay by Page Number - TONED DOWN for readability */
 body[data-page="1"] {
   --corruption-level: 0%;
   --glitch-intensity: 0;
 }
 
 body[data-page="2"] {
-  --corruption-level: 15%;
-  --glitch-intensity: 1;
-  --neon-blue: #00d8ff;
-  filter: hue-rotate(5deg);
+  --corruption-level: 3%;
+  --glitch-intensity: 0.2;
 }
 
 body[data-page="3"] {
-  --corruption-level: 35%;
-  --glitch-intensity: 2;
-  --neon-blue: #00beff;
-  filter: hue-rotate(15deg);
+  --corruption-level: 5%;
+  --glitch-intensity: 0.3;
 }
 
 body[data-page="4"] {
-  --corruption-level: 60%;
-  --glitch-intensity: 3;
-  --neon-blue: #ff3355;
-  filter: hue-rotate(45deg);
+  --corruption-level: 8%;
+  --glitch-intensity: 0.4;
 }
 
 body[data-page="5"] {
-  --corruption-level: 85%;
-  --glitch-intensity: 4;
-  --neon-blue: #ff0055;
-  filter: hue-rotate(90deg);
+  --corruption-level: 10%;
+  --glitch-intensity: 0.5;
+}
+
+body[data-page="6"] {
+  --corruption-level: 12%;
+  --glitch-intensity: 0.6;
+}
+
+body[data-page="7"] {
+  --corruption-level: 15%;
+  --glitch-intensity: 0.7;
+}
+
+body[data-page="8"] {
+  --corruption-level: 5%;
+  --glitch-intensity: 0.2;
+  /* Finale is calmer - story resolution */
 }
 
 /* Base Styles */
@@ -154,13 +162,18 @@ body.fade-out {
 
 #panelImage {
   min-height: 300px;
+  max-height: 50vh;
   background-repeat: no-repeat;
-  background-size: cover;
+  background-size: contain;
   background-position: center;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   position: relative;
   overflow: hidden;
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
 }
 
 #panelImage::after {

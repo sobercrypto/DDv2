@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prince of Persia - Digital Dreamers</title>
+    <link rel="stylesheet" href="../styles/prince.css">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-header">
+            <h1>PRINCE OF PERSIA</h1>
+            <div id="status-display"></div>
+            <button id="exit-button">&larr; BACK TO TERMINAL</button>
+        </div>
+
+        <div id="achievement-banner" class="achievement-banner hidden"></div>
+
+        <!-- Embed PrinceJS game -->
+        <div class="game-frame">
+            <iframe
+                id="prince-game"
+                src="https://princejs.com/?level=1"
+                width="100%"
+                height="600px"
+                frameborder="0"
+                allowfullscreen
+            ></iframe>
+        </div>
+
+        <div class="game-info">
+            <div id="trial-notice" class="notice trial-notice">
+                &#9888;&#65039; TRIAL VERSION - Beat Level 1 to unlock the Prince character!
+            </div>
+            <div id="full-notice" class="notice full-notice hidden">
+                &#9876;&#65039; FULL GAME UNLOCKED - Complete all 12 levels for ultimate power!
+            </div>
+            <div id="completion-notice" class="notice completion-notice hidden">
+                &#10024; You have mastered the Prince's journey. Return to terminal and type TIMESHIFT.
+            </div>
+        </div>
+    </div>
+
+    <script src="../scripts/prince-wrapper.js"></script>
+</body>
+</html>

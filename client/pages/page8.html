@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Digital Dreamers - Finale</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Bangers&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../styles/page1.css" />
+    <style>
+      /* Finale-specific styles */
+      .finale-button {
+        display: none;
+        width: 100%;
+        padding: 20px;
+        margin-top: 20px;
+        background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+        border: 3px solid var(--neon-blue);
+        color: #000;
+        font-family: 'Press Start 2P', cursive;
+        font-size: 16px;
+        cursor: pointer;
+        text-transform: uppercase;
+        transition: all 0.3s ease;
+        box-shadow: 0 0 20px var(--neon-blue);
+      }
+      .finale-button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 40px var(--neon-purple);
+      }
+      .choice-panels.hidden {
+        display: none;
+      }
+      .the-end-banner {
+        text-align: center;
+        font-size: 24px;
+        color: var(--neon-blue);
+        text-shadow: 0 0 20px var(--neon-blue);
+        margin: 20px 0;
+        animation: pulse 2s infinite;
+      }
+    </style>
+  </head>
+  <body data-page="8">
+    <div class="comic-container">
+      <div class="loading-overlay">
+        <div class="loading-text">GENERATING FINALE...</div>
+        <div class="loading-spinner"></div>
+      </div>
+      <div class="comic-page">
+        <div class="comic-header">
+          <h1>DIGITAL DREAMERS</h1>
+          <div class="chapter-info">FINALE</div>
+        </div>
+        <div class="panels-container">
+          <div class="main-panel">
+            <div class="glitch-container">
+              <div id="panelImage" class="panel-image"></div>
+              <div id="panelStoryText" class="story-text"></div>
+            </div>
+            <div class="the-end-banner" id="theEndBanner" style="display: none;">THE END</div>
+            <button class="finale-button" id="finaleButton" onclick="goToCredits()">
+              View Your Journey
+            </button>
+          </div>
+          <!-- Choice panels hidden on finale -->
+          <div class="choice-panels hidden">
+          </div>
+        </div>
+      </div>
+      <div class="scanline"></div>
+      <div class="crt-overlay"></div>
+      <div class="digital-noise"></div>
+    </div>
+    <div class="story-container">
+      <div class="story-content">
+        <img id="storyImage" class="story-image" alt="Story scene" style="display: none" />
+        <div id="storyText" class="story-text"></div>
+      </div>
+    </div>
+    <div class="page-transition-overlay"></div>
+    <script src="../script.js"></script>
+    <script>
+      // Show finale button after story loads
+      document.addEventListener('DOMContentLoaded', () => {
+        // Wait for story to load, then show the button
+        const checkStoryLoaded = setInterval(() => {
+          const storyText = document.getElementById('panelStoryText');
+          const loadingOverlay = document.querySelector('.loading-overlay');
+          if (storyText && storyText.textContent.trim() && loadingOverlay.style.display === 'none') {
+            document.getElementById('finaleButton').style.display = 'block';
+            document.getElementById('theEndBanner').style.display = 'block';
+            clearInterval(checkStoryLoaded);
+          }
+        }, 500);
+      });
+
+      function goToCredits() {
+        document.body.style.opacity = '0';
+        setTimeout(() => {
+          window.location.href = '/pages/credits.html';
+        }, 1000);
+      }
+    </script>
+  </body>
+</html>

@@ -4,68 +4,302 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Digital Dreamers - Credits</title>
-    <!-- Link your main style file -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Bangers&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="../styles/style.css" />
     <style>
-      /* Additional styling specific to the credits page */
+      :root {
+        --neon-blue: #00f3ff;
+        --neon-purple: #bc13fe;
+        --neon-red: #ff0055;
+        --neon-green: #39ff14;
+        --neon-gold: #ffd700;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        background: #000;
+        font-family: "Press Start 2P", cursive;
+        min-height: 100vh;
+        overflow-y: auto;
+      }
+
       .credits-container {
         background: #000;
         color: var(--neon-blue);
         padding: 2rem;
-        max-width: 800px;
+        max-width: 900px;
         margin: 0 auto;
         text-align: center;
         position: relative;
         z-index: 20;
+        min-height: 100vh;
       }
+
       .credits-container header h1 {
-        font-size: 3rem;
+        font-family: "Bangers", cursive;
+        font-size: 3.5rem;
         margin-bottom: 0.5rem;
+        text-shadow: 0 0 20px var(--neon-blue),
+                     3px 3px 0 var(--neon-purple);
       }
-      .credits-container header h2 {
-        font-size: 1.5rem;
-        margin-bottom: 2rem;
+
+      .adventure-title {
+        font-family: "Bangers", cursive;
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
         color: var(--neon-purple);
+        text-shadow: 0 0 15px var(--neon-purple);
+        animation: titlePulse 2s ease-in-out infinite;
       }
+
+      @keyframes titlePulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.9; transform: scale(1.02); }
+      }
+
       .credits-section {
-        margin-bottom: 2rem;
+        margin-bottom: 2.5rem;
+        padding: 1.5rem;
+        border: 2px solid rgba(0, 243, 255, 0.3);
+        border-radius: 10px;
+        background: rgba(0, 0, 0, 0.5);
       }
+
       .credits-section h3 {
         font-size: 1.2rem;
-        margin-bottom: 1rem;
+        margin-bottom: 1.5rem;
+        color: var(--neon-blue);
+        text-shadow: 0 0 10px var(--neon-blue);
       }
+
       .credits-section p,
       .credits-section ul {
-        font-size: 1rem;
+        font-size: 0.9rem;
         margin: 0 auto;
-        max-width: 600px;
+        max-width: 700px;
         text-align: left;
+        line-height: 1.8;
       }
+
       .credits-section ul {
         list-style: none;
         padding: 0;
       }
+
       .credits-section ul li {
-        margin: 0.5rem 0;
+        margin: 0.75rem 0;
       }
+
+      /* Summary Section */
+      .summary-text {
+        font-size: 1rem;
+        line-height: 2;
+        color: #fff;
+        text-align: center;
+        padding: 1rem;
+      }
+
+      /* Loading State */
+      .loading-summary {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+        padding: 2rem;
+      }
+
+      .loading-spinner-small {
+        width: 30px;
+        height: 30px;
+        border: 3px solid var(--neon-purple);
+        border-top: 3px solid transparent;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+
+      /* Achievements */
+      .achievements-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+        padding: 1rem 0;
+      }
+
+      .achievement {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
+        border: 2px solid rgba(0, 243, 255, 0.5);
+        border-radius: 8px;
+        background: rgba(0, 0, 0, 0.7);
+        transition: all 0.3s ease;
+      }
+
+      .achievement.unlocked {
+        border-color: var(--neon-gold);
+        box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+        animation: achievementUnlock 0.5s ease-out;
+      }
+
+      .achievement.locked {
+        opacity: 0.4;
+        filter: grayscale(100%);
+      }
+
+      @keyframes achievementUnlock {
+        0% { transform: scale(0.8); opacity: 0; }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); opacity: 1; }
+      }
+
+      .achievement-icon {
+        font-size: 2.5rem;
+        min-width: 50px;
+        text-align: center;
+      }
+
+      .achievement-info {
+        text-align: left;
+        flex: 1;
+      }
+
+      .achievement-name {
+        font-size: 0.8rem;
+        color: var(--neon-gold);
+        margin-bottom: 0.3rem;
+      }
+
+      .achievement-desc {
+        font-size: 0.65rem;
+        color: #aaa;
+        line-height: 1.4;
+      }
+
+      .achievement.unlocked .achievement-name {
+        text-shadow: 0 0 10px var(--neon-gold);
+      }
+
+      /* New Achievements Banner */
+      .new-achievements {
+        background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(188, 19, 254, 0.2));
+        border: 2px solid var(--neon-gold);
+        border-radius: 10px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        animation: newAchievementGlow 2s ease-in-out infinite;
+      }
+
+      @keyframes newAchievementGlow {
+        0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.3); }
+        50% { box-shadow: 0 0 40px rgba(255, 215, 0, 0.6); }
+      }
+
+      .new-achievements h4 {
+        color: var(--neon-gold);
+        font-size: 1rem;
+        margin-bottom: 1rem;
+        text-shadow: 0 0 15px var(--neon-gold);
+      }
+
+      /* Stats Section */
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+
+      .stat-item {
+        padding: 1rem;
+        border: 1px solid rgba(0, 243, 255, 0.3);
+        border-radius: 8px;
+        background: rgba(0, 0, 0, 0.5);
+      }
+
+      .stat-value {
+        font-size: 1.5rem;
+        color: var(--neon-purple);
+        text-shadow: 0 0 10px var(--neon-purple);
+      }
+
+      .stat-label {
+        font-size: 0.6rem;
+        color: #888;
+        margin-top: 0.5rem;
+      }
+
+      /* Buttons */
       .close-btn {
         background: none;
         border: 2px solid var(--neon-blue);
         color: var(--neon-blue);
-        padding: 10px 20px;
+        padding: 15px 30px;
         cursor: pointer;
         font-family: "Press Start 2P", cursive;
-        font-size: 1rem;
-        transition: background 0.3s, color 0.3s;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+        margin: 0.5rem;
       }
+
       .close-btn:hover {
         background: var(--neon-blue);
         color: #000;
+        box-shadow: 0 0 20px var(--neon-blue);
+        transform: scale(1.05);
       }
-      /* Ensure the overlay effects are behind our content */
+
+      .play-again-btn {
+        background: linear-gradient(135deg, var(--neon-purple), var(--neon-blue));
+        border: none;
+        color: #000;
+        padding: 15px 30px;
+        cursor: pointer;
+        font-family: "Press Start 2P", cursive;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+        margin: 0.5rem;
+      }
+
+      .play-again-btn:hover {
+        box-shadow: 0 0 30px var(--neon-purple);
+        transform: scale(1.05);
+      }
+
+      .button-group {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 2rem;
+      }
+
+      /* Overlay effects */
       .scanline,
       .crt-overlay {
         z-index: 10;
+        pointer-events: none;
+      }
+
+      /* Character badge */
+      .character-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        border: 2px solid var(--neon-purple);
+        border-radius: 20px;
+        margin-bottom: 1rem;
+        font-size: 0.8rem;
       }
     </style>
   </head>
@@ -73,64 +307,84 @@
     <div class="game-container">
       <div class="credits-container">
         <header>
-          <h1>Digital Dreamers</h1>
-          <h2>A Journey Concluded</h2>
+          <h1>DIGITAL DREAMERS</h1>
+          <div class="adventure-title" id="adventureTitle">Your Adventure</div>
+          <div class="character-badge" id="characterBadge">
+            <span id="characterName">Character</span>
+          </div>
         </header>
+
+        <!-- Journey Summary Section -->
         <section class="credits-section">
-          <h3>Your Journey Summary</h3>
+          <h3>Your Journey</h3>
           <div id="summaryContent">
-            <!-- Summary from localStorage will be inserted here -->
-            <p>Your journey was epic, but no summary is available.</p>
-          </div>
-        </section>
-        <section class="credits-section">
-          <h3>Your Achievements</h3>
-          <div id="achievements">
-            <p>No achievements unlocked.</p>
-          </div>
-        </section>
-        <section class="credits-section">
-          <h3>Credits</h3>
-          <ul id="creditsList">
-            <li><strong>Lead Developer:</strong> PIXL_DRIFT</li>
-            <li><strong>AI Narrative and Design:</strong> SPUDNIK</li>
-            <li><strong>Concept and Story:</strong> Digital Dreamers Team</li>
-            <li>
-              <strong>Art and Animation:</strong> Replicate and Anthropic API
-            </li>
-            <li><strong>Sound and Effects:</strong> Retro Audio Studio</li>
-          </ul>
-        </section>
-        <section class="credits-section">
-          <h3>Secret Icon</h3>
-          <div id="easterEgg">
-            <img
-              src="../assets/secret-icon.png"
-              alt="Secret Icon"
-              title="Click me for a surprise!"
-              style="width: 50px; cursor: pointer"
-            />
-            <div
-              id="bonusContent"
-              style="
-                display: none;
-                margin-top: 1rem;
-                font-size: 0.9rem;
-                color: var(--neon-purple);
-              "
-            >
-              <p>
-                You found a secret! Bonus: extra credits, hidden lore, or easter
-                egg details here.
-              </p>
+            <div class="loading-summary">
+              <div class="loading-spinner-small"></div>
+              <p style="font-size: 0.8rem;">Generating your story summary...</p>
             </div>
           </div>
         </section>
-        <footer>
-          <button class="close-btn" id="closeComicBtn">
-            Close the Comic Book
+
+        <!-- New Achievements Section (shown if any new achievements unlocked) -->
+        <div class="new-achievements" id="newAchievements" style="display: none;">
+          <h4>NEW ACHIEVEMENTS UNLOCKED!</h4>
+          <div class="achievements-grid" id="newAchievementsGrid"></div>
+        </div>
+
+        <!-- All Achievements Section -->
+        <section class="credits-section">
+          <h3>Achievements</h3>
+          <div id="achievementsContent">
+            <div class="loading-summary">
+              <div class="loading-spinner-small"></div>
+              <p style="font-size: 0.8rem;">Loading achievements...</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="credits-section">
+          <h3>Your Stats</h3>
+          <div class="stats-grid" id="statsGrid">
+            <div class="stat-item">
+              <div class="stat-value" id="statPlaythroughs">-</div>
+              <div class="stat-label">STORIES COMPLETED</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value" id="statGoodChoices">-</div>
+              <div class="stat-label">HEROIC CHOICES</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value" id="statEvilChoices">-</div>
+              <div class="stat-label">DARK CHOICES</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value" id="statAchievements">-</div>
+              <div class="stat-label">ACHIEVEMENTS</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Credits Section -->
+        <section class="credits-section">
+          <h3>Credits</h3>
+          <ul id="creditsList">
+            <li><strong>Created by:</strong> Digital Dreamers Team</li>
+            <li><strong>Story Generation:</strong> Claude AI (Anthropic)</li>
+            <li><strong>Art Generation:</strong> DALL-E 3 (OpenAI)</li>
+            <li><strong>Character Design:</strong> PIXL_DRIFT</li>
+          </ul>
+        </section>
+
+        <!-- Buttons -->
+        <div class="button-group">
+          <button class="play-again-btn" id="playAgainBtn">
+            Play Again
           </button>
-        </footer>
+          <button class="close-btn" id="closeComicBtn">
+            Main Menu
+          </button>
+        </div>
       </div>
     </div>
 
@@ -138,42 +392,253 @@
     <div class="crt-overlay"></div>
 
     <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        // Load the story summary from localStorage
-        const summaryEl = document.getElementById("summaryContent");
-        const storedSummary = localStorage.getItem("storySummary");
-        console.log("Stored summary:", storedSummary);
-        if (storedSummary) {
-          summaryEl.innerHTML = `<p>${storedSummary}</p>`;
-        } else {
-          summaryEl.innerHTML =
-            "<p>Your journey was epic, but no summary is available.</p>";
+      // All achievement definitions (matching server)
+      const ACHIEVEMENTS = {
+        first_steps: { id: 'first_steps', name: 'First Steps', description: 'Complete your first story', icon: '🎬' },
+        heros_path: { id: 'heros_path', name: "Hero's Path", description: 'Finish a story with good alignment', icon: '✨' },
+        dark_journey: { id: 'dark_journey', name: 'Dark Journey', description: 'Finish a story with evil alignment', icon: '🌑' },
+        balanced_soul: { id: 'balanced_soul', name: 'Balanced Soul', description: 'Finish a story with neutral alignment', icon: '⚖️' },
+        speed_runner: { id: 'speed_runner', name: 'Speed Runner', description: 'Finish a story in under 10 minutes', icon: '⚡' },
+        deep_thinker: { id: 'deep_thinker', name: 'Deep Thinker', description: 'Spend over 30 minutes on a playthrough', icon: '🤔' },
+        completionist: { id: 'completionist', name: 'Completionist', description: 'Finish a story with each character', icon: '🏆' },
+        pixldrift_master: { id: 'pixldrift_master', name: 'Pixldrift Master', description: 'Complete 3 stories with Pixldrift', icon: '💜' },
+        spudnik_master: { id: 'spudnik_master', name: 'Spudnik Master', description: 'Complete 3 stories with Spudnik', icon: '🥔' },
+        steve_master: { id: 'steve_master', name: 'Steve Master', description: 'Complete 3 stories with Steve', icon: '⛏️' }
+      };
+
+      document.addEventListener("DOMContentLoaded", async () => {
+        // Get data from localStorage
+        const sessionId = localStorage.getItem("sessionId");
+        const playerId = localStorage.getItem("playerId") || generatePlayerId();
+        const character = localStorage.getItem("selectedCharacter") || "pixldrift";
+        const storyHistory = JSON.parse(localStorage.getItem("storyHistory") || "[]");
+        const storyChoices = JSON.parse(localStorage.getItem("storyChoices") || "[]");
+        const startTime = parseInt(localStorage.getItem("storyStartTime") || Date.now());
+
+        // Store playerId if newly generated
+        localStorage.setItem("playerId", playerId);
+
+        // Display character
+        const characterNames = {
+          pixldrift: "Pixldrift",
+          spudnik: "Spudnik",
+          steve: "Steve"
+        };
+        document.getElementById("characterName").textContent = characterNames[character] || character;
+
+        // Calculate duration in seconds
+        const durationMs = Date.now() - startTime;
+        const durationSeconds = Math.floor(durationMs / 1000);
+
+        // Calculate moral alignment from choices
+        const moralAlignment = calculateMoralAlignment(storyChoices);
+
+        // Generate summary first, then complete story with the summary
+        try {
+          // Step 1: Generate summary
+          const summaryResult = await generateSummary(storyHistory, storyChoices, character, moralAlignment);
+          displaySummary(summaryResult);
+
+          // Step 2: Complete story and check achievements
+          const completionResult = await completeStory(
+            playerId,
+            character,
+            moralAlignment,
+            summaryResult.summary,
+            summaryResult.title,
+            durationSeconds
+          );
+
+          // Display achievements
+          displayAchievements(completionResult.newAchievements, playerId);
+
+        } catch (error) {
+          console.error("Error loading credits:", error);
+          document.getElementById("summaryContent").innerHTML =
+            '<p class="summary-text">Your adventure has concluded. The digital realm awaits your return.</p>';
+          document.getElementById("achievementsContent").innerHTML =
+            '<p style="color: #888;">Could not load achievements.</p>';
         }
 
-        // Easter Egg Toggle
-        const easterEggImg = document.querySelector("#easterEgg img");
-        const bonusContent = document.getElementById("bonusContent");
-        if (easterEggImg) {
-          easterEggImg.addEventListener("click", () => {
-            bonusContent.style.display =
-              bonusContent.style.display === "block" ? "none" : "block";
-          });
-        }
+        // Button handlers
+        document.getElementById("playAgainBtn").addEventListener("click", () => {
+          clearSessionData();
+          window.location.href = "/pages/character-select.html";
+        });
 
-        // "Close the Comic Book" Button: clear session data if needed and redirect to index.html
-        document
-          .getElementById("closeComicBtn")
-          .addEventListener("click", () => {
-            // Optionally, clear game-related localStorage items if you want to reset for a new playthrough
-            console.log("Close button clicked!");
-            localStorage.removeItem("sessionId");
-            localStorage.removeItem("currentPage");
-            localStorage.removeItem("storyChoices");
-            localStorage.removeItem("storyHistory");
-            localStorage.removeItem("storySummary");
-            window.location.href = "/index.html";
-          });
+        document.getElementById("closeComicBtn").addEventListener("click", () => {
+          clearSessionData();
+          window.location.href = "/index.html";
+        });
       });
+
+      function generatePlayerId() {
+        return 'player_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
+      }
+
+      // Calculate moral alignment from choices (1=good, 2=neutral, 3=evil)
+      function calculateMoralAlignment(choices) {
+        if (!choices || choices.length === 0) return 'neutral';
+
+        let score = 0;
+        choices.forEach(choice => {
+          const choiceNum = typeof choice === 'object' ? choice.choice : choice;
+          if (choiceNum === 1) score += 1;      // Good choice
+          else if (choiceNum === 2) score += 0;  // Neutral choice
+          else if (choiceNum === 3) score -= 1;  // Evil choice
+        });
+
+        const avgScore = score / choices.length;
+        if (avgScore > 0.3) return 'good';
+        if (avgScore < -0.3) return 'evil';
+        return 'neutral';
+      }
+
+      async function generateSummary(storyHistory, previousChoices, character, moralAlignment) {
+        try {
+          const response = await fetch("/api/generate-summary", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              character,
+              storyHistory,
+              previousChoices,
+              moralAlignment
+            })
+          });
+
+          if (!response.ok) throw new Error("Failed to generate summary");
+          const data = await response.json();
+          return {
+            title: data.adventureTitle,
+            summary: data.summary
+          };
+        } catch (error) {
+          console.error("Summary generation error:", error);
+          return {
+            title: "A Digital Adventure",
+            summary: "Your journey through the digital realm has come to an end. The choices you made shaped your unique story."
+          };
+        }
+      }
+
+      async function completeStory(playerId, character, moralAlignment, storySummary, adventureTitle, durationSeconds) {
+        try {
+          const response = await fetch("/api/complete-story", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              playerId,
+              character,
+              moralAlignment,
+              storySummary,
+              adventureTitle,
+              durationSeconds
+            })
+          });
+
+          if (!response.ok) throw new Error("Failed to complete story");
+          const data = await response.json();
+          return {
+            newAchievements: data.newAchievements ? data.newAchievements.map(a => a.id) : [],
+            allAchievements: data.allAchievements || [],
+            totalCompletions: data.totalCompletions || 0
+          };
+        } catch (error) {
+          console.error("Story completion error:", error);
+          return { newAchievements: [], allAchievements: [], totalCompletions: 0 };
+        }
+      }
+
+      async function loadAllAchievements(playerId) {
+        try {
+          const response = await fetch(`/api/achievements/${playerId}`);
+          if (!response.ok) throw new Error("Failed to load achievements");
+          const data = await response.json();
+          return {
+            achievements: data.achievements || [],
+            stats: data.stats || {}
+          };
+        } catch (error) {
+          console.error("Achievements load error:", error);
+          return { achievements: [], stats: {} };
+        }
+      }
+
+      function displaySummary(result) {
+        document.getElementById("adventureTitle").textContent = result.title || "A Digital Adventure";
+        document.getElementById("summaryContent").innerHTML =
+          `<p class="summary-text">${result.summary || "Your adventure has concluded."}</p>`;
+      }
+
+      async function displayAchievements(newAchievementIds, playerId) {
+        // Show new achievements if any
+        if (newAchievementIds && newAchievementIds.length > 0) {
+          const newSection = document.getElementById("newAchievements");
+          const newGrid = document.getElementById("newAchievementsGrid");
+          newSection.style.display = "block";
+
+          newGrid.innerHTML = newAchievementIds.map(achId => {
+            const ach = ACHIEVEMENTS[achId];
+            if (!ach) return '';
+            return `
+              <div class="achievement unlocked">
+                <div class="achievement-icon">${ach.icon}</div>
+                <div class="achievement-info">
+                  <div class="achievement-name">${ach.name}</div>
+                  <div class="achievement-desc">${ach.description}</div>
+                </div>
+              </div>
+            `;
+          }).join('');
+        }
+
+        // Load and display all achievements
+        const { achievements: unlockedAchievements, stats } = await loadAllAchievements(playerId);
+
+        // Create a set of unlocked achievement IDs
+        const unlockedSet = new Set(unlockedAchievements.map(a => a.id));
+
+        const achievementsHtml = Object.values(ACHIEVEMENTS).map(ach => {
+          const isUnlocked = unlockedSet.has(ach.id);
+          return `
+            <div class="achievement ${isUnlocked ? 'unlocked' : 'locked'}">
+              <div class="achievement-icon">${ach.icon}</div>
+              <div class="achievement-info">
+                <div class="achievement-name">${ach.name}</div>
+                <div class="achievement-desc">${ach.description}</div>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        document.getElementById("achievementsContent").innerHTML =
+          `<div class="achievements-grid">${achievementsHtml}</div>`;
+
+        // Display stats
+        document.getElementById("statPlaythroughs").textContent = stats.totalCompletions || 0;
+        document.getElementById("statAchievements").textContent = unlockedAchievements.length || 0;
+
+        // Calculate good/evil choices from current playthrough for display
+        const storyChoices = JSON.parse(localStorage.getItem("storyChoices") || "[]");
+        let goodChoices = 0, evilChoices = 0;
+        storyChoices.forEach(choice => {
+          const choiceNum = typeof choice === 'object' ? choice.choice : choice;
+          if (choiceNum === 1) goodChoices++;
+          else if (choiceNum === 3) evilChoices++;
+        });
+        document.getElementById("statGoodChoices").textContent = goodChoices;
+        document.getElementById("statEvilChoices").textContent = evilChoices;
+      }
+
+      function clearSessionData() {
+        localStorage.removeItem("sessionId");
+        localStorage.removeItem("currentPage");
+        localStorage.removeItem("storyChoices");
+        localStorage.removeItem("storyHistory");
+        localStorage.removeItem("storySummary");
+        localStorage.removeItem("storyStartTime");
+      }
     </script>
   </body>
 </html>

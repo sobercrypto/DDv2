@@ -2,20 +2,35 @@
 document.addEventListener('DOMContentLoaded', () => {
     console.log('Character select script loaded');
 
-    // Character data
+    // Character data - ACTIVE CHARACTERS ONLY
     const characterData = {
-        pixl: {
-            name: "PIXL_DRIFT",
-            description: "A digital nomad who traverses the quantum realms of code and creativity. Master of pixel manipulation and reality distortion.",
+        pixldrift: {
+            name: "PIXLDRIFT",
+            description: "A cyber-enhanced protagonist navigating a high-tech dystopia. Cool, stylish, high-stakes action with philosophical undertones. Art style: Futuristic neon cyberpunk - Blade Runner meets Spider-Verse.",
         },
         spudnik: {
             name: "SPUDNIK",
-            description: "The enigmatic AI consciousness born from the fusion of quantum computing and root vegetable wisdom.",
+            description: "A sentient potato with expressive eyes and a tiny sprout on top. Wholesome, heartfelt, funny - Ted Lasso energy, optimistic even in hard times. Art style: Warm storybook illustration - Studio Ghibli meets Pixar.",
         },
-        fifi: {
-            name: "FiFi",
-            description: "A mysterious entity with unprecedented abilities. Origins unknown, potential unlimited.",
+        steve: {
+            name: "STEVE",
+            description: "The iconic survivor from Minecraft. Adventure, exploration, building, survival in a blocky voxel world. Art style: Minecraft aesthetic - everything is cubes!",
+        },
+        // UNLOCKABLE - Rik (commented out until unlock system is implemented)
+        /*
+        rik: {
+            name: "RIK",
+            description: "A cloaked figure surrounded by floating glowing sigils. Cryptic, cerebral, puzzle-like. Speaks in riddles that manifest as physical sigils. Art style: Dark occult-tech fusion.",
+            locked: true,
+            unlockCondition: "Complete the game with all three main characters"
         }
+        */
+    };
+
+    // Alias support for backwards compatibility
+    const characterAliases = {
+        pixl: "pixldrift",
+        pixl_drift: "pixldrift"
     };
 
     // Initialize video elements
@@ -55,12 +70,21 @@ document.addEventListener('DOMContentLoaded', () => {
     // Character selection
     document.querySelectorAll('.character-card.available').forEach(card => {
         card.addEventListener('click', () => {
-            selectedCharacter = card.dataset.character;
+            let charId = card.dataset.character;
+            // Handle aliases for backwards compatibility
+            charId = characterAliases[charId] || charId;
+            selectedCharacter = charId;
             console.log('Character clicked:', selectedCharacter);
 
             if (characterData[selectedCharacter]) {
-                modalTitle.textContent = characterData[selectedCharacter].name;
-                modalDescription.textContent = characterData[selectedCharacter].description;
+                // Check if character is locked
+                if (characterData[selectedCharacter].locked) {
+                    modalTitle.textContent = "LOCKED";
+                    modalDescription.textContent = characterData[selectedCharacter].unlockCondition || "This character is not yet available.";
+                } else {
+                    modalTitle.textContent = characterData[selectedCharacter].name;
+                    modalDescription.textContent = characterData[selectedCharacter].description;
+                }
                 modal.classList.remove('hidden');
             }
         });
@@ -70,14 +94,25 @@ document.addEventListener('DOMContentLoaded', () => {
     if (selectBtn) {
         selectBtn.addEventListener('click', () => {
             if (selectedCharacter) {
+                // Don't allow selecting locked characters
+                if (characterData[selectedCharacter] && characterData[selectedCharacter].locked) {
+                    console.log('Character is locked:', selectedCharacter);
+                    return;
+                }
+
                 console.log('Character selected:', selectedCharacter);
-                
-                // Store selection in localStorage
+
+                // Store selection in localStorage (use normalized ID)
                 localStorage.setItem('selectedCharacter', selectedCharacter);
-                
+
+                // Clear any previous story data for fresh playthrough
+                localStorage.removeItem('storyHistory');
+                localStorage.removeItem('storyChoices');
+                localStorage.setItem('currentPage', '1');
+
                 // Add fade effect
                 document.body.style.opacity = '0';
-                
+
                 // Navigate to first page
                 setTimeout(() => {
                     window.location.href = 'page1.html';

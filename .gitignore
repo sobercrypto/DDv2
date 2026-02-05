@@ -40,3 +40,7 @@ shrinkwrap.yaml
 # Temporary files
 *.tmp
 .cache/
+ 
+# Claude Code 
+.claude/ 
+nul 

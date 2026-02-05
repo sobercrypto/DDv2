@@ -1,0 +1,319 @@
+/* === Prince of Persia - Digital Dreamers Wrapper === */
+
+/* Reset & Base */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  background: #0a0a0a;
+  font-family: 'VT323', monospace;
+  color: #FFD700;
+  overflow-x: hidden;
+}
+
+/* === Game Container === */
+.game-container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 16px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* === Header === */
+.game-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: linear-gradient(180deg, #1a0a00 0%, #0d0500 100%);
+  border: 1px solid #8B4513;
+  border-bottom: 2px solid #FFD700;
+  margin-bottom: 8px;
+}
+
+.game-header h1 {
+  font-family: 'VT323', monospace;
+  font-size: 28px;
+  color: #FFD700;
+  text-shadow: 0 0 8px rgba(255, 215, 0, 0.5), 0 2px 4px rgba(0, 0, 0, 0.8);
+  letter-spacing: 4px;
+  margin: 0;
+}
+
+#status-display {
+  font-size: 16px;
+  color: #cc9933;
+  text-shadow: 0 0 4px rgba(204, 153, 51, 0.4);
+}
+
+#exit-button {
+  font-family: 'VT323', monospace;
+  font-size: 16px;
+  color: #33ff33;
+  background: #0a0a0a;
+  border: 1px solid #33ff33;
+  padding: 6px 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+#exit-button:hover {
+  background: #33ff33;
+  color: #000;
+  box-shadow: 0 0 10px rgba(51, 255, 51, 0.5);
+}
+
+#exit-button:active {
+  transform: scale(0.96);
+}
+
+/* === Achievement Banner === */
+.achievement-banner {
+  padding: 14px 20px;
+  margin-bottom: 8px;
+  text-align: center;
+  font-size: 22px;
+  letter-spacing: 2px;
+  border: 2px solid #FFD700;
+  background: linear-gradient(90deg, #1a0a00, #2a1500, #1a0a00);
+  color: #FFD700;
+  text-shadow: 0 0 12px rgba(255, 215, 0, 0.8);
+  animation: banner-glow 2s ease-in-out infinite alternate;
+  overflow: hidden;
+  position: relative;
+}
+
+.achievement-banner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.1), transparent);
+  animation: banner-shine 3s ease-in-out infinite;
+}
+
+@keyframes banner-glow {
+  0%   { box-shadow: 0 0 8px rgba(255, 215, 0, 0.3), inset 0 0 8px rgba(255, 215, 0, 0.1); }
+  100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.6), inset 0 0 16px rgba(255, 215, 0, 0.15); }
+}
+
+@keyframes banner-shine {
+  0%   { left: -100%; }
+  50%  { left: 100%; }
+  100% { left: 100%; }
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* === Game Iframe === */
+.game-frame {
+  position: relative;
+  width: 100%;
+  background: #000;
+  border: 2px solid #8B4513;
+  box-shadow:
+    0 0 12px rgba(139, 69, 19, 0.4),
+    inset 0 0 30px rgba(0, 0, 0, 0.8);
+  overflow: hidden;
+}
+
+.game-frame iframe {
+  display: block;
+  width: 100%;
+  height: 600px;
+  border: none;
+  background: #000;
+}
+
+/* Faux CRT vignette over the game */
+.game-frame::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 65%,
+    rgba(0, 0, 0, 0.35) 100%
+  );
+}
+
+/* === Notice Bars === */
+.notice {
+  padding: 10px 16px;
+  margin-top: 8px;
+  font-size: 18px;
+  text-align: center;
+  border: 1px solid;
+}
+
+.trial-notice {
+  color: #FFD700;
+  border-color: #8B4513;
+  background: linear-gradient(90deg, rgba(139, 69, 19, 0.15), rgba(139, 69, 19, 0.25), rgba(139, 69, 19, 0.15));
+  animation: notice-pulse 3s ease-in-out infinite;
+}
+
+@keyframes notice-pulse {
+  0%, 100% { opacity: 0.85; }
+  50%      { opacity: 1; }
+}
+
+.full-notice {
+  color: #33ff33;
+  border-color: #33ff33;
+  background: rgba(51, 255, 51, 0.05);
+  text-shadow: 0 0 6px rgba(51, 255, 51, 0.4);
+}
+
+.completion-notice {
+  color: #33ffff;
+  border-color: #33ffff;
+  background: rgba(51, 255, 255, 0.05);
+  text-shadow: 0 0 8px rgba(51, 255, 255, 0.5);
+  animation: completion-glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes completion-glow {
+  0%   { box-shadow: 0 0 4px rgba(51, 255, 255, 0.2); }
+  100% { box-shadow: 0 0 16px rgba(51, 255, 255, 0.5); }
+}
+
+/* === Legendary Achievement (Ocarina unlock) === */
+.achievement-legendary-banner {
+  border-color: #33ffff;
+  background: linear-gradient(90deg, #001a1a, #003333, #001a1a);
+  animation: legendary-glow 1.5s ease-in-out infinite alternate;
+}
+
+.achievement-legendary-banner::before {
+  background: linear-gradient(90deg, transparent, rgba(51, 255, 255, 0.15), transparent);
+}
+
+@keyframes legendary-glow {
+  0%   { box-shadow: 0 0 12px rgba(51, 255, 255, 0.4), inset 0 0 12px rgba(51, 255, 255, 0.1); }
+  100% { box-shadow: 0 0 30px rgba(51, 255, 255, 0.8), inset 0 0 20px rgba(51, 255, 255, 0.2); }
+}
+
+.achievement-legendary {
+  color: #33ffff;
+  text-shadow: 0 0 12px rgba(51, 255, 255, 0.8);
+}
+
+/* === Debug Bar === */
+.debug-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  margin-top: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px dashed #555;
+}
+
+.debug-label {
+  font-size: 14px;
+  color: #888;
+  letter-spacing: 2px;
+  flex-shrink: 0;
+}
+
+.debug-btn {
+  font-family: 'VT323', monospace;
+  font-size: 14px;
+  padding: 4px 12px;
+  cursor: pointer;
+  border: 1px solid;
+  background: transparent;
+  transition: all 0.2s ease;
+}
+
+.debug-btn:hover:not(:disabled) {
+  transform: scale(1.02);
+}
+
+.debug-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.debug-btn-prince {
+  color: #FFD700;
+  border-color: #8B4513;
+}
+
+.debug-btn-prince:hover:not(:disabled) {
+  background: rgba(255, 215, 0, 0.1);
+  box-shadow: 0 0 8px rgba(255, 215, 0, 0.3);
+}
+
+.debug-btn-ocarina {
+  color: #33ffff;
+  border-color: #33ffff;
+}
+
+.debug-btn-ocarina:hover:not(:disabled) {
+  background: rgba(51, 255, 255, 0.1);
+  box-shadow: 0 0 8px rgba(51, 255, 255, 0.3);
+}
+
+.debug-btn-reset {
+  color: #ff3333;
+  border-color: #ff3333;
+  margin-left: auto;
+}
+
+.debug-btn-reset:hover {
+  background: rgba(255, 51, 51, 0.1);
+  box-shadow: 0 0 8px rgba(255, 51, 51, 0.3);
+}
+
+/* === Responsive === */
+@media (max-width: 768px) {
+  .game-header {
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+  }
+
+  .game-header h1 {
+    font-size: 22px;
+  }
+
+  .game-frame iframe {
+    height: 400px;
+  }
+
+  .notice {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .game-container {
+    padding: 8px;
+  }
+
+  .game-header h1 {
+    font-size: 18px;
+    letter-spacing: 2px;
+  }
+
+  .game-frame iframe {
+    height: 300px;
+  }
+}

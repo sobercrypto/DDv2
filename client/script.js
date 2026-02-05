@@ -19,14 +19,21 @@ class StoryManager {
     // We'll store the current choices (from the latest API call) for display.
     this.currentChoices = [];
     this.baseUrl = window.location.origin;
+
+    console.log("[StoryManager] Initialized with:", {
+      selectedCharacter: this.selectedCharacter,
+      storyHistoryLength: this.storyHistory.length,
+      previousChoicesLength: this.previousChoices.length,
+    });
   }
 
   async initialize() {
     if (!this.selectedCharacter) {
-      console.error("No character selected. Redirecting...");
+      console.error("[StoryManager] No character selected. Redirecting to character-select...");
       window.location.href = "character-select.html";
       return false;
     }
+    console.log("[StoryManager] Starting story for character:", this.selectedCharacter);
 
     // Get DOM elements from within the comic container
     this.storyText = document.querySelector("#panelStoryText");
@@ -84,7 +91,9 @@ class StoryManager {
     let currentPage = parseInt(localStorage.getItem("currentPage") || "1", 10);
     currentPage++; // Increment page number
     localStorage.setItem("currentPage", currentPage);
-    if (currentPage >= 6) {
+
+    // Story is 8 pages - go to credits after page 8
+    if (currentPage > 8) {
       window.location.href = "/pages/credits.html";
     } else {
       window.location.href = `/pages/page${currentPage}.html`;
@@ -113,7 +122,7 @@ class StoryManager {
       // Update the image panel if provided
       if (this.storyImage && storyContent.imageUrl) {
         this.storyImage.style.backgroundImage = `url(${storyContent.imageUrl})`;
-        this.storyImage.style.backgroundSize = "cover";
+        this.storyImage.style.backgroundSize = "contain";
         this.storyImage.style.backgroundPosition = "center";
       }
 
@@ -143,15 +152,17 @@ class StoryManager {
 
   async getStoryForCharacter(character) {
     console.log("Getting story for character:", character);
-    // Map short character IDs to full names
+    // Map short character IDs to normalized names for server
     const characterMap = {
-      pixl: "pixl_drift",
+      pixl: "pixldrift",
+      pixl_drift: "pixldrift",
+      pixldrift: "pixldrift",
       spudnik: "spudnik",
-      mystery: "mystery",
       steve: "steve",
-      fifi: "FiFi",
-      rik: "Rik Blahah",
-      andy: "Andy",
+      rik: "rik",
+      prince: "prince",
+      "the prince": "prince",
+      persia: "prince",
     };
     const mappedCharacter =
       characterMap[character.toLowerCase()] || character.toLowerCase();
@@ -160,11 +171,15 @@ class StoryManager {
     const previousStory = this.storyHistory.join("\n\n") || "";
 
     try {
+      // Calculate current page number based on story history
+      const pageNumber = this.storyHistory.length + 1;
+
       const response = await fetch("/api/generate-story", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           character: mappedCharacter,
+          pageNumber: pageNumber,
           previousChoices: this.previousChoices,
           previousStory: previousStory,
         }),
@@ -267,13 +282,14 @@ function initializeFocusStates() {
   });
 }
 
+// TODO: Sound effects are optional - add hover.mp3 to assets/sounds/ to enable
 function addHoverSound() {
   const hoverSound = new Audio("assets/sounds/hover.mp3");
   document.querySelectorAll(".interactive-item").forEach((item) => {
     item.addEventListener("mouseenter", () => {
       hoverSound.currentTime = 0;
       hoverSound.volume = 0.2;
-      hoverSound.play().catch(() => {});
+      hoverSound.play().catch(() => {}); // Silently fails if sound file missing
     });
   });
 }
@@ -414,6 +430,40 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function initializeCharacterSelect() {
+  // Check Rik unlock from localStorage
+  if (localStorage.getItem('rikUnlocked') === 'true') {
+    characters.rik.unlocked = true;
+  }
+
+  // Check if Prince is unlocked
+  const princeUnlocked = localStorage.getItem('princeUnlocked') === 'true';
+  if (princeUnlocked) {
+    characters.prince.unlocked = true;
+  }
+
+  // Dynamically inject unlockable character cards into the grid
+  const characterGrid = document.querySelector('.character-grid');
+
+  if (characterGrid && characters.rik) {
+    const rikCard = createCharacterCard('rik', characters.rik);
+    const lockedCards = characterGrid.querySelectorAll('.character-card.locked');
+    if (lockedCards.length > 0) {
+      characterGrid.insertBefore(rikCard, lockedCards[0]);
+    } else {
+      characterGrid.appendChild(rikCard);
+    }
+  }
+
+  if (characterGrid && characters.prince) {
+    const princeCard = createCharacterCard('prince', characters.prince);
+    const lockedCards = characterGrid.querySelectorAll('.character-card.locked');
+    if (lockedCards.length > 0) {
+      characterGrid.insertBefore(princeCard, lockedCards[0]);
+    } else {
+      characterGrid.appendChild(princeCard);
+    }
+  }
+
   const characterCards = document.querySelectorAll(".character-card.available");
   const modal = document.querySelector(".modal");
   const closeBtn = document.querySelector(".close-btn");
@@ -428,9 +478,29 @@ function initializeCharacterSelect() {
   if (closeBtn)
     closeBtn.addEventListener("click", () => modal.classList.add("hidden"));
   if (selectBtn) {
-    selectBtn.addEventListener("click", () => {
+    selectBtn.addEventListener("click", (e) => {
+      e.preventDefault(); // Prevent form submission
+
       const selected = modal.dataset.currentChar;
+      if (!selected) {
+        console.error("No character selected");
+        return;
+      }
+
+      console.log("Character selected:", selected);
+
+      // Store in localStorage
       localStorage.setItem("selectedCharacter", selected);
+
+      // Clear previous story data for fresh playthrough
+      localStorage.removeItem("storyHistory");
+      localStorage.removeItem("storyChoices");
+      localStorage.setItem("currentPage", "1");
+
+      // Track story start time for achievements
+      localStorage.setItem("storyStartTime", Date.now().toString());
+
+      // Navigate to first page
       window.location.href = "../pages/page1.html";
     });
   }
@@ -440,19 +510,29 @@ function showCharacterDetails(charId) {
   const modal = document.querySelector(".modal");
   const modalTitle = modal.querySelector(".modal-title");
   const modalDescription = modal.querySelector(".modal-description");
-  modal.dataset.currentChar = charId;
+
+  // Handle backwards compatibility aliases
+  const normalizedId = characterIdAliases[charId] || charId;
+  modal.dataset.currentChar = normalizedId;
   modal.classList.remove("hidden");
-  const character = characters[charId];
+
+  const character = characters[normalizedId];
   if (character) {
-    modalTitle.textContent = character.name;
-    modalDescription.textContent = character.description;
+    if (character.unlocked === false) {
+      modalTitle.textContent = "LOCKED";
+      modalDescription.textContent =
+        character.unlockCondition || "Complete special requirements to unlock.";
+    } else {
+      modalTitle.textContent = character.name;
+      modalDescription.textContent = character.description;
+    }
   }
 }
 
 function createCharacterCard(id, character) {
   const card = document.createElement("div");
   card.className = `character-card ${
-    character.unlocked ? "" : "locked"
+    character.unlocked ? "available" : "locked"
   } retro-border`;
   card.dataset.character = id;
   if (character.unlocked) {
@@ -495,6 +575,11 @@ function selectCharacter(characterId) {
     confirmBtn.addEventListener("click", () => {
       localStorage.setItem("selectedCharacter", characterId);
       localStorage.setItem("characterData", JSON.stringify(character));
+      // Clear previous story data and track start time
+      localStorage.removeItem("storyHistory");
+      localStorage.removeItem("storyChoices");
+      localStorage.setItem("currentPage", "1");
+      localStorage.setItem("storyStartTime", Date.now().toString());
       document.body.classList.add("fade-out");
       setTimeout(() => {
         window.location.href = "../pages/page1.html";
@@ -641,7 +726,17 @@ const itemContent = {
   },
   "center-monitor": {
     title: "QUANTUM-DOS v3.14",
-    text: 'The main development monitor pulses with an unsettling, otherworldly glow. Strange symbols cascade down the screen in patterns that seem to defy the laws of mathematics. A command prompt blinks ominously, displaying: "INITIATING QUANTUM FORK :: ERROR: REALITY BRANCH DETECTED :: TIMELINE INTEGRITY: 47.3%" Below this, strings of impossible code scroll endlessly, occasionally forming recognizable words before dissolving back into chaos.',
+    text: 'The main development monitor pulses with an unsettling, otherworldly glow. A command prompt blinks ominously, green text cascading down the screen. The terminal awaits input...',
+    choices: [
+      { text: "Step away", action: () => hideModal() },
+      {
+        text: "Access Terminal",
+        action: () => {
+          hideModal();
+          window.location.href = '/pages/terminal.html';
+        },
+      },
+    ],
   },
   "right-tv": {
     title: "Test Station Monitor",
@@ -689,50 +784,72 @@ const itemContent = {
   },
 };
 // Character data used in select screens and modals
+// ACTIVE CHARACTERS
 const characters = {
-  pixl_drift: {
-    name: "PIXL_DRIFT",
+  pixldrift: {
+    name: "PIXLDRIFT",
     description:
-      "A digital nomad traversing quantum realms. Master of pixel manipulation and reality distortion.",
-    attributes: { coding: 90, creativity: 85, resilience: 65 },
+      "A cyber-enhanced protagonist navigating a high-tech dystopia. Cool, stylish, high-stakes action with philosophical undertones.",
+    artStyle: "Futuristic neon cyberpunk - Blade Runner meets Spider-Verse",
+    attributes: { style: 95, tech: 90, resolve: 80 },
     unlocked: true,
   },
   spudnik: {
     name: "SPUDNIK",
     description:
-      "An enigmatic AI born from quantum computing and root vegetable wisdom.",
-    attributes: { intelligence: 95, intuition: 88, stability: 70 },
-    unlocked: true,
-  },
-  fifi: {
-    name: "FiFi",
-    description: "A presence yet to be unveiled...",
-    attributes: { unknown: "???", potential: "???", mystery: "???" },
+      "A sentient potato with expressive eyes and a tiny sprout. Wholesome, heartfelt, funny - Ted Lasso energy, optimistic even in hard times.",
+    artStyle: "Warm storybook illustration - Studio Ghibli meets Pixar",
+    attributes: { heart: 95, humor: 90, resilience: 85 },
     unlocked: true,
   },
   steve: {
     name: "STEVE",
     description:
-      "Steve is the quintessential survivor from Minecraft. Resourceful, creative, and resilient, he builds wonders and thrives in a blocky world.",
-    attributes: { survival: 90, building: 85, resourcefulness: 95 },
+      "The iconic survivor from Minecraft. Adventure, exploration, building, and survival in a blocky voxel world.",
+    artStyle: "Minecraft aesthetic - blocky, voxel-based, cubic",
+    attributes: { survival: 90, building: 95, resourcefulness: 85 },
     unlocked: true,
   },
-  mystery: {
-    name: "???",
-    description: "A presence yet to be unveiled...",
-    attributes: { unknown: "???", potential: "???", mystery: "???" },
+  // UNLOCKABLE CHARACTER
+  rik: {
+    name: "RIK",
+    description:
+      "A cloaked figure surrounded by floating glowing sigils. Cryptic, cerebral, puzzle-like. Speaks in riddles that manifest as physical sigils.",
+    artStyle: "Dark occult-tech fusion - glowing sigils, shadowy environments",
+    attributes: { mystery: 99, wisdom: 85, power: 90 },
     unlocked: false,
+    unlockCondition: "Find and speak the three sigils in the terminal...",
   },
+  // UNLOCKABLE CHARACTER - Prince (unlocked via Prince of Persia Level 1)
+  // TODO: Generate prince_cover.webp with DALL-E
+  // Prompt: "Persian prince character in ornate robes holding scimitar, palace background, golden hour lighting, comic book cover style"
+  prince: {
+    name: "THE PRINCE",
+    description:
+      "Master of blade and time, heir to the Persian throne. Skilled acrobat and swordsman who faces impossible odds with grace and determination.",
+    artStyle: "Persian cinematic comic - warm golds, deep blues, palace architecture",
+    attributes: { agility: 95, blade: 90, honor: 85 },
+    unlocked: false,
+    unlockCondition: "Beat Level 1 of Prince of Persia in the terminal arcade...",
+  },
+};
+
+// Backwards compatibility aliases
+const characterIdAliases = {
+  pixl: "pixldrift",
+  pixl_drift: "pixldrift",
 };
 
 // Additional character descriptions for the modal
 const characterDescriptions = {
-  pixl: "A master of digital manipulation, PIXL_DRIFT reshapes digital reality like a ghost in the machine.",
+  pixldrift:
+    "A cyber-enhanced protagonist navigating rain-slicked neon streets. Cool, stylish, fighting the good fight in a high-tech dystopia.",
   spudnik:
-    "A quantum-agricultural AI processing reality with both digital and organic insights.",
+    "A sentient potato radiating warmth and optimism. With expressive eyes and a tiny sprout, Spudnik brings joy to every adventure.",
   steve:
-    "Steve is the quintessential survivor from the blocky world of Minecraft. Resourceful, creative, and resilient, he can build wonders and survive against all odds.",
-  mystery: "An enigmatic entity whose true nature remains shrouded in mystery.",
+    "The iconic blocky survivor from Minecraft. Master builder, fearless explorer, ready to craft solutions to any problem.",
+  rik: "A mysterious cloaked figure whose riddles manifest as glowing sigils. Cryptic, cerebral, and deeply powerful.",
+  prince: "Master of blade and time. A Persian prince who defies fate with acrobatic grace, scimitar in hand, driven by honor and destiny.",
 };
 
 // ====================
@@ -772,84 +889,11 @@ function init() {
 }
 
 function initializeCredits() {
-  // Animate the page fade-in for a polished effect
+  // Credits page now handles its own initialization via inline script
+  // This function is kept for backwards compatibility but credits.html
+  // manages its own API calls for summary generation and achievements
   document.body.classList.add("fade-in");
-
-  // Load and display the story summary
-  const summaryEl = document.getElementById("summaryContent");
-  const storedSummary = localStorage.getItem("storySummary");
-  if (storedSummary) {
-    summaryEl.innerHTML = `<p>${storedSummary}</p>`;
-  } else {
-    summaryEl.innerHTML =
-      "<p>Your journey was epic, but no summary is available.</p>";
-  }
-
-  // Load and display achievements (if any) from localStorage
-  const achievementsEl = document.getElementById("achievements");
-  const achievementsJSON = localStorage.getItem("achievements");
-  if (achievementsJSON) {
-    const achievements = JSON.parse(achievementsJSON);
-    if (achievements.length > 0) {
-      let achievementsHTML = "<ul>";
-      achievements.forEach((ach) => {
-        achievementsHTML += `<li>${ach}</li>`;
-      });
-      achievementsHTML += "</ul>";
-      achievementsEl.innerHTML = achievementsHTML;
-    } else {
-      achievementsEl.innerHTML = "<p>No achievements unlocked.</p>";
-    }
-  } else {
-    achievementsEl.innerHTML = "<p>No achievements unlocked.</p>";
-  }
-
-  // Display credits
-  const creditsEl = document.getElementById("creditsList");
-  creditsEl.innerHTML = `
-    <ul>
-      <li><strong>Lead Developer:</strong> PIXL_DRIFT</li>
-      <li><strong>AI Narrative & Design:</strong> SPUDNIK</li>
-      <li><strong>Concept & Story:</strong> Digital Dreamers Team</li>
-      <li><strong>Art & Animation:</strong> Replicate & Anthropic API</li>
-      <li><strong>Sound & Effects:</strong> Retro Audio Studio</li>
-    </ul>
-  `;
-
-  // Add an interactive easter egg element
-  const easterEggEl = document.getElementById("easterEgg");
-  if (easterEggEl) {
-    easterEggEl.addEventListener("click", () => {
-      // Toggle bonus content when the secret icon is clicked.
-      const bonusContent = document.getElementById("bonusContent");
-      if (
-        bonusContent.style.display === "none" ||
-        !bonusContent.style.display
-      ) {
-        bonusContent.style.display = "block";
-      } else {
-        bonusContent.style.display = "none";
-      }
-    });
-  }
-
-  // Optionally, add a typewriter effect to the summary
-  // (This is just an example – you'll need to adjust for your style)
-  const typewriter = (element) => {
-    const text = element.innerText;
-    element.innerText = "";
-    let i = 0;
-    const interval = setInterval(() => {
-      element.innerText += text.charAt(i);
-      i++;
-      if (i > text.length) {
-        clearInterval(interval);
-      }
-    }, 50);
-  };
-
-  // Uncomment the line below to use the typewriter effect on the summary:
-  // typewriter(summaryEl);
+  console.log("Credits page initialized - using inline script for API calls");
 }
 
 // ====================

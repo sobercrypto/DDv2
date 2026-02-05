@@ -10,8 +10,8 @@
     <div class="character-select-screen">
       <h1>Choose Your Digital Dreamer</h1>
       <div class="character-grid">
-        <!-- PIXL Character Card -->
-        <div class="character-card available" data-character="pixl_drift">
+        <!-- PIXLDRIFT Character Card -->
+        <div class="character-card available" data-character="pixldrift">
           <div class="character-content">
             <div class="character-image pixl">
               <video muted loop playsinline>
@@ -21,24 +21,24 @@
                 />
               </video>
             </div>
-            <h2>PIXL_DRIFT</h2>
+            <h2>PIXLDRIFT</h2>
             <div class="character-stats">
               <div class="stat">
-                <label>Code Mastery</label>
+                <label>Style</label>
+                <div class="stat-bar">
+                  <div class="fill" style="width: 95%"></div>
+                </div>
+              </div>
+              <div class="stat">
+                <label>Tech</label>
                 <div class="stat-bar">
                   <div class="fill" style="width: 90%"></div>
                 </div>
               </div>
               <div class="stat">
-                <label>Digital Artistry</label>
+                <label>Resolve</label>
                 <div class="stat-bar">
-                  <div class="fill" style="width: 85%"></div>
-                </div>
-              </div>
-              <div class="stat">
-                <label>Reality Bending</label>
-                <div class="stat-bar">
-                  <div class="fill" style="width: 75%"></div>
+                  <div class="fill" style="width: 80%"></div>
                 </div>
               </div>
               <div class="health-stat">
@@ -68,21 +68,21 @@
             <h2>SPUDNIK</h2>
             <div class="character-stats">
               <div class="stat">
-                <label>Quantum Processing</label>
+                <label>Heart</label>
                 <div class="stat-bar">
                   <div class="fill" style="width: 95%"></div>
                 </div>
               </div>
               <div class="stat">
-                <label>Root Intelligence</label>
+                <label>Humor</label>
                 <div class="stat-bar">
-                  <div class="fill" style="width: 88%"></div>
+                  <div class="fill" style="width: 90%"></div>
                 </div>
               </div>
               <div class="stat">
-                <label>Digital Synthesis</label>
+                <label>Resilience</label>
                 <div class="stat-bar">
-                  <div class="fill" style="width: 82%"></div>
+                  <div class="fill" style="width: 85%"></div>
                 </div>
               </div>
               <div class="health-stat">
@@ -100,50 +100,45 @@
           </div>
         </div>
 
-        <!-- FIFI Character Card -->
-        <div class="character-card available" data-character="fifi">
+        <!-- RIK Character Card - UNLOCKABLE (TODO: implement unlock system) -->
+        <!-- Uncomment when unlock system is ready:
+        <div class="character-card locked" data-character="rik">
           <div class="character-content">
-            <div class="character-image fifi">
-              <video muted loop playsinline>
-                <source
-                  src="https://cdn.glitch.global/5817c318-6998-4ceb-a6e8-cf334857147e/FiFi-Action.mp4?v=1739071624712"
-                  type="video/mp4"
-                />
-              </video>
+            <div class="character-image rik">
+              <div class="locked-overlay">
+                <span class="lock-icon">🔒</span>
+              </div>
             </div>
-            <h2>FiFi</h2>
+            <h2>RIK</h2>
             <div class="character-stats">
               <div class="stat">
-                <label>Unknown Power</label>
+                <label>Mystery</label>
+                <div class="stat-bar">
+                  <div class="fill" style="width: 99%"></div>
+                </div>
+              </div>
+              <div class="stat">
+                <label>Wisdom</label>
                 <div class="stat-bar">
                   <div class="fill" style="width: 85%"></div>
                 </div>
               </div>
               <div class="stat">
-                <label>Hidden Ability</label>
+                <label>Power</label>
                 <div class="stat-bar">
-                  <div class="fill" style="width: 92%"></div>
-                </div>
-              </div>
-              <div class="stat">
-                <label>Mystery Skill</label>
-                <div class="stat-bar">
-                  <div class="fill" style="width: 88%"></div>
+                  <div class="fill" style="width: 90%"></div>
                 </div>
               </div>
               <div class="health-stat">
-                <label>System Health</label>
-                <div class="health-pixels">
-                  <div class="health-pixel"></div>
-                  <div class="health-pixel"></div>
-                  <div class="health-pixel"></div>
-                </div>
+                <label>Unlock Condition</label>
+                <div class="unlock-hint">Complete game with all 3 characters</div>
               </div>
             </div>
           </div>
         </div>
+        -->
         
-        <!-- Steve Character Card -->
+        <!-- STEVE Character Card -->
         <div class="character-card available" data-character="steve">
           <div class="character-content">
             <div class="character-image steve">
@@ -157,26 +152,27 @@
             <h2>STEVE</h2>
             <div class="character-stats">
               <div class="stat">
-                <label>Survival Skills</label>
+                <label>Survival</label>
                 <div class="stat-bar">
-                  <div class="fill" style="width: 85%"></div>
+                  <div class="fill" style="width: 90%"></div>
                 </div>
               </div>
               <div class="stat">
-                <label>Building Mastery</label>
+                <label>Building</label>
                 <div class="stat-bar">
-                  <div class="fill" style="width: 80%"></div>
+                  <div class="fill" style="width: 95%"></div>
                 </div>
               </div>
               <div class="stat">
                 <label>Resourcefulness</label>
                 <div class="stat-bar">
-                  <div class="fill" style="width: 90%"></div>
+                  <div class="fill" style="width: 85%"></div>
                 </div>
               </div>
               <div class="health-stat">
-                <label>Endurance</label>
+                <label>Hearts</label>
                 <div class="health-pixels">
+                  <div class="health-pixel"></div>
                   <div class="health-pixel"></div>
                   <div class="health-pixel"></div>
                   <div class="health-pixel"></div>
@@ -187,22 +183,24 @@
           </div>
         </div>
 
-        <!-- Locked Character Cards -->
+        <!-- Locked Character Cards - Placeholders for future unlockables -->
         <div class="character-card locked">
           <div class="character-content">
             <div class="character-image locked"></div>
-            <h2>ENCRYPTED</h2>
+            <h2>???</h2>
+            <p class="locked-hint">Coming Soon</p>
           </div>
         </div>
 
         <div class="character-card locked">
           <div class="character-content">
             <div class="character-image locked"></div>
-            <h2>CLASSIFIED</h2>
+            <h2>???</h2>
+            <p class="locked-hint">Coming Soon</p>
           </div>
         </div>
-        
-        <!-- Future character cards can be added here -->
+
+        <!-- Future character cards: Rik (when unlock system is ready), and reserved mystery character -->
       </div>
     </div>
 
